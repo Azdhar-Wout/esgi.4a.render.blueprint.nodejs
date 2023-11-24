@@ -1,14 +1,22 @@
-services
-  - type web
-    name nodejs
-    region frankfurt
-    repo "https://github.com/Azdhar-Wout/esgi.4a.render.blueprint.nodejs"
-    runtime node
-    """
-    key: PLSQL_PASSWORD
-    fromService:
-      name: mysql
-      type: pserv
-      envVarKey: PASSWORD
-      """
- 
+services:
+  - type: web
+    name: cloud-web
+    region: frankfurt
+    plan: free
+    runtime: node
+    repo: https://github.com/ArchOrn/render-deploy-bp.git
+    branch: master
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cloud-db
+          property: connectionString
+
+databases:
+  - name: cloud-db
+    region: frankfurt
+    plan: free
+    databaseName: cloud
+    user: cloud
